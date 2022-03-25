@@ -34,7 +34,7 @@ pub fn find_user<'a>(conn: SqliteConnection, key:UserKey<'a>)->Result<User>{
         UserKey::Username(name) => users::table
             .filter(users::username.eq(name))
             .select((users::id,users::username))
-            .first<User>(conn)
+            .first::<User>(conn)
             .map_err(AppError::from),
         UserKey::ID(id) => users::table
             .find(id)
