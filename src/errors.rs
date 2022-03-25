@@ -13,7 +13,7 @@ pub enum AppError{
 }
 
 impl fmt::Display for AppError{
-    fn fmt(&self, &mut fmt::Formatter){
+    fn fmt(&self, f: &mut fmt::Formatter)-> fmt::Result {
         match self{
             AppError::RecordAlredyExists => write!(f,"this record violates a uniques constract"),
             AppError::RecordNotFound => write!(f,"this record does not exist"),
