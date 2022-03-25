@@ -36,8 +36,7 @@ impl Blog {
                 .wrap(middleware::Loger::default())
                 .congigure(rootes::users::configure)
         })
-        .bind("127.0.0.1", self.port))?
+        .bind("127.0.0.1", self.port)?
         .run()
 
     }
-}
