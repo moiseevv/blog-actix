@@ -1,7 +1,7 @@
 use crate::AppError;
 use actix_web::HttpResponse;
 
-pub(super) mod users;
+pub(super) mod users; 
 
 fn convert<T,E>(res:Result<T,E>)-> Result<HttpResponse,AppError>
 where 

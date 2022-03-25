@@ -10,7 +10,6 @@ mod errors;
 mod models;
 mod routes;
 mod schema;
-mod users;
 
 type Pool = r2d2::Pool<ConnectionManager<SqliteConnection>>;
 
