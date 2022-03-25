@@ -26,17 +26,18 @@ impl Blog {
         let manager = ConnectionManager::<SqliteConnection>::new(database_url);
 
         let pool = r2d2::Pool::builder()
-            .builder(manager)
+            .build(manager)
             .expect("Failer to create pool.");
             
-        println!(" starting hppt server : 127.0.0.1:{}", sefl.port);
+        println!(" starting hppt server : 127.0.0.1:{}", self.port);
         HttpServer::new(move || {
             App::new()
                 .data(pool.clone())
-                .wrap(middleware::Loger::default())
-                .congigure(rootes::users::configure)
+                .wrap(middleware::Logger::default())
+                .configure(rootes::users::configure)
         })
         .bind("127.0.0.1", self.port)?
         .run()
 
     }
+}
