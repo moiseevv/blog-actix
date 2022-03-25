@@ -24,7 +24,7 @@ impl fmt::Display for AppError{
 }
 
 impl From(diesel::result::Error) for AppError{
-    fn from(e: diesel::result::Error) -> self{
+    fn from(e: diesel::result::Error) -> Self{
         match e {
             DatabaseError(UniqueViolation, _) => AppError::RecordAlredyExists,
             NotFound => AppError::RecordNotFound,
@@ -34,7 +34,7 @@ impl From(diesel::result::Error) for AppError{
 }
 
 impl From<BlockingError<AppError>> for AppError{
-    fn from(e:BlockingError<AppError>) -> self{
+    fn from(e: BlockingError<AppError>) -> Self{
         match e {
             BlockingError::Error(inner) => inner,
             BlockingError::Canceled => AppError::OperationCanceled,
