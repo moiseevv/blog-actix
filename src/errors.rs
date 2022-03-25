@@ -18,7 +18,7 @@ impl fmt::Display for AppError{
             AppError::RecordAlredyExists => write!(f,"this record violates a uniques constract"),
             AppError::RecordNotFound => write!(f,"this record does not exist"),
             AppError::DatabaseError(e) => write!(f, "error from database {:?}",e),
-            AppError::OperationCanceled => write(f, " operation canceled"),
+            AppError::OperationCanceled => write!(f, " operation canceled"),
         }
     }
 }
@@ -47,7 +47,7 @@ impl From<BlockingError<AppError>> for AppError{
 struct ErrorResponse{
     err: String,
 }
-impl actix_web::ErrorResponse for AppError{
+impl actix_web::ResponseError for AppError{
     fn error_response(&self) -> HttpResponse{
         let err = format!("{}", self);
         let mut builder = match self{
