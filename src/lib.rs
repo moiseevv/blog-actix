@@ -30,7 +30,6 @@ impl Blog {
             .expect("Failer to create pool.");
             
         println!(" starting hppt server : 127.0.0.1:{}", sefl.port);
-
         HttpServer::new(move || {
             App::new()
                 .data(pool.clone())
