@@ -24,7 +24,7 @@ pub fn crate_user(conn:SqliteConnection, username: &str) ->Result<User>{
     
     })
 }
-pun enum UserKey<'a>{
+pub enum UserKey<'a>{
     Username(&'a str),
     ID(i32),
 }
