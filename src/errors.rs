@@ -23,7 +23,7 @@ impl fmt::Display for AppError{
     }
 }
 
-impl From(diesel::result::Error) for AppError{
+impl From<diesel::result::Error> for AppError{
     fn from(e: diesel::result::Error) -> Self{
         match e {
             DatabaseError(UniqueViolation, _) => AppError::RecordAlredyExists,

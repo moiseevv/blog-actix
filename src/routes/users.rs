@@ -21,13 +21,13 @@ pub fn configure(cfg: &mut web::ServiceConfig){
 
 
 
+
 fn crate_user(
     item: web::Json<UserInput>,
     pool: web::Data<Pool>,
-
 ) -> impl Future<Item = HttpResponse, Error = AppError>{
     web::block(move ||{
-        let conn = &poll.get().unwrap();
+        let conn = &pool.get().unwrap();
         let username = item.into_inner().username;
         models::crate_user(conn, username.as_str())
     })
@@ -51,7 +51,7 @@ fn get_user(
     pool: web::Data<Pool>,
 ) -> impl Future<Item = HttpResponse, Error = AppError>{
     web::block( move ||{
-        let conn = &poll.get().unwrap();
+        let conn = &pool.get().unwrap();
         let id = user_id.into_inner();
         let key = models::UserKey::ID(id);
         models::find_user(conn, key)
