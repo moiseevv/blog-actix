@@ -22,14 +22,14 @@ pub fn configure(cfg: &mut web::ServiceConfig){
 
 
 
-fn crate_user(
+fn create_user(
     item: web::Json<UserInput>,
     pool: web::Data<Pool>,
 ) -> impl Future<Item = HttpResponse, Error = AppError>{
     web::block(move ||{
         let conn = &pool.get().unwrap();
         let username = item.into_inner().username;
-        models::crate_user(conn, username.as_str())
+        models::create_user(conn, username.as_str())
     })
     .then(convert)
 }

@@ -10,7 +10,7 @@ pub struct User{
     pub username: String,
 }
 
-pub fn crate_user(conn:SqliteConnection, username: &str) ->Result<User>{
+pub fn create_user(conn: &SqliteConnection, username: &str) ->Result<User>{
     conn.transaction(||{
         diesel::insert_into(users::table)
         .values((users::username.eq(username),))
@@ -29,7 +29,7 @@ pub enum UserKey<'a>{
     ID(i32),
 }
 
-pub fn find_user<'a>(conn: SqliteConnection, key:UserKey<'a>)->Result<User>{
+pub fn find_user<'a>(conn: &SqliteConnection, key:UserKey<'a>)->Result<User>{
     match key{
         UserKey::Username(name) => users::table
             .filter(users::username.eq(name))

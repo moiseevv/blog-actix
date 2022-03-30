@@ -28,7 +28,7 @@ impl From<diesel::result::Error> for AppError{
         match e {
             DatabaseError(UniqueViolation, _) => AppError::RecordAlredyExists,
             NotFound => AppError::RecordNotFound,
-            _ => AppError::DatabaseError,
+            _ => AppError::DatabaseError(e),
         }
     } 
 }
