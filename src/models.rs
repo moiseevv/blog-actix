@@ -1,4 +1,4 @@
-use crate::AppError;
+use crate::errord::AppError;
 use crate::schema::{users};
 use diesel::prelude::*;
 
@@ -12,7 +12,7 @@ pub struct User{
 
 pub fn crate_user(conn:SqliteConnection, username: &str) ->Result<User>{
     conn.transaction(||{
-        diesel::insert_into(user::table)
+        diesel::insert_into(users::table)
         .values((users::username.eq(username),))
         .execute(conn)?;
 

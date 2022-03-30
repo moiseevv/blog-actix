@@ -1,7 +1,7 @@
 use crate::errors::AppError;
 use crate::routes::convert;
-use crate::{moduls, Pool};
-use actix_web::{web. HttpResponse};
+use crate::{models, Pool};
+use actix_web::{web, HttpResponse};
 use futures::Future;
 
 #[derive(Debug, Serialize, Deserialize)]
