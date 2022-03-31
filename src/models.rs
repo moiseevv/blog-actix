@@ -1,6 +1,7 @@
 use crate::errors::AppError;
 use crate::schema::{users};
-use crate::schema::post;
+use crate::schema::posts;
+use diesel::expression::SqlLiteral;
 use diesel::prelude::*;
 
 type Result<T> = std::result::Result<T,AppError>;
@@ -39,6 +40,45 @@ pub enum UserKey<'a>{
     ID(i32),
 }
 
+
+
+
+
+
+
+
+pub fn create_post(conn: &SqliteConnection, user: &User, title: &str, body: &str)-> Result<Post>{
+    conn.transaction(||{
+        diesel::insert_into(posts::table)
+            .values((
+                posts::user_id.eq(user.id),
+                posts::title.eq(title),
+                posts::body.eq(body),
+            ))
+            .execute(conn)?;
+
+        posts::table
+            .order(posts::id.desc())
+            .select(posts::all_columns)
+            .first(conn)
+            .map_err(Into::into)
+    })
+}
+
+pub fn publish_post(conn: &SqliteConnection, post_id: i32) -> Result<Post>{
+    conn.transaction(||{
+        diesel::update(posts::table.filter(posts::id.eq(post_id)))
+            .set(posts::published.eq(true))
+            .execute(conn)?;
+
+        posts::table
+            .find(post_id)
+            .select(posts::all_columns)
+            .first(conn)
+            .map_err(Into::into)
+    })
+}
+
 pub fn find_user<'a>(conn: &SqliteConnection, key:UserKey<'a>)->Result<User>{
     match key{
         UserKey::Username(name) => users::table
@@ -52,4 +92,53 @@ pub fn find_user<'a>(conn: &SqliteConnection, key:UserKey<'a>)->Result<User>{
             .first::<User>(conn)
             .map_err(Into::into),
     }
-} 
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+pub fn all_posts(conn: &SqliteConnection) -> Result<Vec<(Post, User)>>{
+    posts::table
+        .order(posts::id.desc())
+        .filter(posts::published.eq(true))
+        .inner_join(users::table)
+        .select((posts::all_columns, (users::id, users::username)))
+        .load::<(Post, User)>(conn)
+        .map_err(Into::into)
+}
+
+pub fn user_post(
+    conn: &SqliteConnection,
+    user_id: i32, 
+) -> Result<Vec<Post>>{
+    posts::table
+        .filter(posts::user_id.eq(user_id))
+        .order(posts::id.desc)
+        .select(posts::all_columns)
+        .load::<Post>(conn)
+        .map_err(Into::into)
+}
