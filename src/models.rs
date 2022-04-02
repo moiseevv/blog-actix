@@ -146,7 +146,13 @@ pub fn user_posts(
         .filter(posts::user_id.eq(user_id))
         .order(posts::id.desc())
         .select(posts::all_columns)
-        .load::<Post>(conn)?
+        .load::<Post>(conn)?;
+
+
+    let comment = Comment::belongs_to(&posts)
+        .inner_join(users::table)
+        .select((comments::all_columns, (users::id, users::username)))
+        .load::<(Comment, User)>(conn)?
         .grouped_by(&posts);
 
     Ok(posts.into_iter().zip(comments).collect())
