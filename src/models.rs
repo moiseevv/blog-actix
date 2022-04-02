@@ -154,35 +154,6 @@ pub fn user_posts(
 
     Ok(posts.into_iter().zip(comments).collect())
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 pub fn post_comments(conn: &SqliteConnection, post_id: i32) -> Result<Vec<Comment, User>>{
     comments::table
         .filter(comments::post_id.eq(post_id))
@@ -194,7 +165,7 @@ pub fn post_comments(conn: &SqliteConnection, post_id: i32) -> Result<Vec<Commen
 
 #[derive(Queryable, Serialize, Debug)]
 pub struct PostWithComment{
-    pub id:32,
+    pub id:i32,
     pub title: String,
     pub published: bool,
 }
@@ -213,29 +184,6 @@ pub fn user_comments(
         .load::<(Comment, PostWithComment)>(conn)
         .map_err(Into::into)
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 pub fn all_posts(conn: &SqliteConnection) -> Result<Vec<(Post, User)>>{
     posts::table

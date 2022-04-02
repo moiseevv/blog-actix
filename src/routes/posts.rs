@@ -12,7 +12,8 @@ pub fn configure(cfg: &mut web::ServiceConfig){
         .route(web::get().to_async(user_posts)),
     )
     .service(web::resource("/posts").route(web::get().to_async(all_posts)))
-
+    .service(web::resource("/posts/{id}/publish").route(web::post().to_async(publish_post)));
+}
 #[derive(Debug, Serialize, Deserialize)]
 struct PostInput{
     title: String,
