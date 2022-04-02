@@ -23,6 +23,7 @@ struct PostInput{
 fn add_post(
     user_id: web::Path<i32>,
     post: web::Json<PostInput>,
+    pool: web::Data<Pool>,
 ) -> impl Future<Item = HttpResponse, Error = AppError>{
     web::block(move ||{
         let conn: &SqliteConnection = &pool.get().unwrap();
