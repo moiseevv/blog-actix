@@ -20,7 +20,7 @@ pub struct Post{
     pub user_id: i32,
     pub title: String,
     pub body: String,
-    pub published: bool,
+    pub pubished: bool,
 }
 #[derive(Queryable, Identifiable, Associations, Serialize, Debug)]
 #[belongs_to(User)]
@@ -104,7 +104,7 @@ pub fn create_comment(
 pub fn publish_post(conn: &SqliteConnection, post_id: i32) -> Result<Post>{
     conn.transaction(||{
         diesel::update(posts::table.filter(posts::id.eq(post_id)))
-            .set(posts::published.eq(true))
+            .set(posts::pubished.eq(true))
             .execute(conn)?;
 
         posts::table
@@ -133,7 +133,7 @@ pub fn find_user<'a>(conn: &SqliteConnection, key:UserKey<'a>)->Result<User>{
 pub fn all_posts(conn: &SqliteConnection) -> Result<Vec<((Post, User), Vec<(Comment, User)>)>>{
     let query = posts::table
         .order(posts::id.desc())
-        .filter(posts::published.eq(true))
+        .filter(posts::pubished.eq(true))
         .inner_join(users::table)
         .select((comments::all_columns, (users::id, users::username)))
         .load::<(Comment, User)>(conn)?
@@ -167,7 +167,7 @@ pub fn post_comments(conn: &SqliteConnection, post_id: i32) -> Result<Vec<Commen
 pub struct PostWithComment{
     pub id:i32,
     pub title: String,
-    pub published: bool,
+    pub pubished: bool,
 }
 
 pub fn user_comments(
@@ -179,7 +179,7 @@ pub fn user_comments(
         .inner_join(posts::table)
         .select((
             comments::all_columns,
-            (posts::id, posts::title, posts::published),
+            (posts::id, posts::title, posts::pubished),
         ))
         .load::<(Comment, PostWithComment)>(conn)
         .map_err(Into::into)
