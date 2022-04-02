@@ -129,7 +129,7 @@ pub fn all_posts(conn: &SqliteConnection) -> Result<Vec<((Post, User), Vec<(Comm
         let post_with_user = query.load::<(Post, User)>(conn)?;
         let (posts, post_users):(Vec<_>, Vec<_>) = post_with_user.into_iter().unzip();
 
-        let comments = Comment::belongs_to(&posts)
+        let comments = Comment::belonging_to(&posts)
         .inner_join(users::table)
         .select((comments::all_columns, (users::id, users::username)))
         .load::<(Comment, User)>(conn)?
@@ -148,7 +148,7 @@ pub fn user_posts(
         .load::<Post>(conn)?;
 
 
-    let comments = Comment::belongs_to(&posts)
+    let comments = Comment::belonging_to(&posts)
         .inner_join(users::table)
         .select((comments::all_columns, (users::id, users::username)))
         .load::<(Comment, User)>(conn)?
