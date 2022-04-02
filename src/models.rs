@@ -51,13 +51,6 @@ pub enum UserKey<'a>{
     ID(i32),
 }
 
-
-
-
-
-
-
-
 pub fn create_post(conn: &SqliteConnection, user: &User, title: &str, body: &str)-> Result<Post>{
     conn.transaction(||{
         diesel::insert_into(posts::table)
@@ -75,8 +68,6 @@ pub fn create_post(conn: &SqliteConnection, user: &User, title: &str, body: &str
             .map_err(Into::into)
     })
 }
-
-
 
 pub fn create_comment(
     conn: &SqliteConnection,
@@ -134,6 +125,12 @@ pub fn all_posts(conn: &SqliteConnection) -> Result<Vec<((Post, User), Vec<(Comm
     let query = posts::table
         .order(posts::id.desc())
         .filter(posts::pubished.eq(true))
+        .inner_join(users::table)
+        .select((posts::all_columns, (users::id, users::username)));
+        let post_with_user = query.load::<(Post, User)>(conn)?;
+        let (posts, post_users):(Vec<_>, Vec<_>) = post_with_user.into_iter().unzip();
+
+        let comments = Comment::belongs_to(&posts)
         .inner_join(users::table)
         .select((comments::all_columns, (users::id, users::username)))
         .load::<(Comment, User)>(conn)?
