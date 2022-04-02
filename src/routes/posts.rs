@@ -27,7 +27,7 @@ fn add_post(
 ) -> impl Future<Item = HttpResponse, Error = AppError>{
     web::block(move ||{
         let conn: &SqliteConnection = &pool.get().unwrap();
-        let key: models::UserKey::ID(user_id.into_inner());
+        let key =  models::UserKey::ID(user_id.into_inner());
         models::find_user(conn, key).and_then(|user|{
             let post = post.into_inner();
             let title = post.title;

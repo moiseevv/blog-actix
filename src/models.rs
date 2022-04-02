@@ -2,7 +2,6 @@ use crate::errors::AppError;
 use crate::schema::{users};
 use crate::schema::posts;
 use crate::schema::comments;
-use diesel::expression::SqlLiteral;
 use diesel::prelude::*;
 
 type Result<T> = std::result::Result<T,AppError>;
