@@ -135,7 +135,7 @@ pub fn all_posts(conn: &SqliteConnection) -> Result<Vec<((Post, User), Vec<(Comm
         .load::<(Comment, User)>(conn)?
         .grouped_by(&posts);
 
-    Ok(posts.into_inner().zip(post_users).zip(comments).collect())
+    Ok(posts.into_iter().zip(post_users).zip(comments).collect())
 }
 pub fn user_posts(
     conn: &SqliteConnection,
