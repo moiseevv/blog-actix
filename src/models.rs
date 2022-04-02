@@ -134,7 +134,7 @@ pub fn all_posts(conn: &SqliteConnection) -> Result<Vec<((Post, User), Vec<(Comm
     let query = posts::table
         .order(posts::id.desc())
         .filter(posts::published.eq(true))
-        .inner_join(useers::table)
+        .inner_join(users::table)
         .select((comments::all_columns, (users::id, users::username)))
         .load::<(Comment, User)>(conn)?
         .grouped_by(&posts);
@@ -158,7 +158,7 @@ pub fn post_comments(conn: &SqliteConnection, post_id: i32) -> Result<Vec<Commen
     comments::table
         .filter(comments::post_id.eq(post_id))
         .inner_join(users::table)
-        .select((comments::all_columns, (user::id, users::username)))
+        .select((comments::all_columns, (users::id, users::username)))
         .load::<(Comment, User)>(conn)
         .map_err(Into::into)
 }
@@ -185,15 +185,15 @@ pub fn user_comments(
         .map_err(Into::into)
 }
 
-pub fn all_posts(conn: &SqliteConnection) -> Result<Vec<(Post, User)>>{
-    posts::table
-        .order(posts::id.desc())
-        .filter(posts::published.eq(true))
-        .inner_join(users::table)
-        .select((posts::all_columns, (users::id, users::username)))
-        .load::<(Post, User)>(conn)
-        .map_err(Into::into)
-}
+
+    
+ 
+
+
+
+
+
+
 
 pub fn user_post(
     conn: &SqliteConnection,
