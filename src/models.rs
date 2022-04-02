@@ -149,7 +149,7 @@ pub fn user_posts(
         .load::<Post>(conn)?;
 
 
-    let comment = Comment::belongs_to(&posts)
+    let comments = Comment::belongs_to(&posts)
         .inner_join(users::table)
         .select((comments::all_columns, (users::id, users::username)))
         .load::<(Comment, User)>(conn)?
