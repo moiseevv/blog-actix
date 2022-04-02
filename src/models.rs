@@ -203,7 +203,7 @@ pub fn user_post(
 ) -> Result<Vec<Post>>{
     posts::table
         .filter(posts::user_id.eq(user_id))
-        .order(posts::id.desc)
+        .order(posts::id.desc())
         .select(posts::all_columns)
         .load::<Post>(conn)
         .map_err(Into::into)
